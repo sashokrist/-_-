@@ -112,17 +112,17 @@ class BookingController extends Controller
 
             $business = $booking->business;
 
-            if ($business) {
-                $phone = $business->phone;
-                $email = $business->email;
-
-                NotificationService::sendNotification(
-                    $booking->notification_method,
-                    $phone,
-                    $email,
-                    $booking
-                );
-            }
+//            if ($business) {
+//                $phone = $business->phone;
+//                $email = $business->email;
+//
+//                NotificationService::sendNotification(
+//                    $booking->notification_method,
+//                    $phone,
+//                    $email,
+//                    $booking
+//                );
+//            }
 
             return redirect()->route('bookings.index')->with('success', "Успешно запазихте час! Клиентът ще бъде уведомен с {$booking->notification_method}.");
         } catch (Exception $e) {
