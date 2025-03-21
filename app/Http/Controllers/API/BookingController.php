@@ -3,24 +3,27 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBookingRequest;
-use App\Http\Requests\UpdateBookingRequest;
-use App\Models\Booking;
+use App\Models\{Booking, Business};
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
 class BookingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index()
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
+    public function index(Request $request)
     {
         try {
-            $bookings = Booking::with('doctor')->orderBy('id', 'DESC')->paginate(10);
+            $bookings = Booking::with(['business.businessType', 'doctor', 'hairstylist', 'table'])
+                ->filter($request->all())
+                ->orderBy('id', 'DESC')
+                ->paginate(10);
+
             return response()->json($bookings);
         } catch (Exception $e) {
             Log::error('Error fetching bookings: ' . $e->getMessage());
@@ -28,19 +31,35 @@ class BookingController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param StoreBookingRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(StoreBookingRequest $request)
+    public function store(Request $request)
     {
+        $rules = [
+            'business_id' => 'required|exists:businesses,id',
+            'date_time' => 'required|date|after:now',
+            'client_name' => 'required|string|max:255',
+            'personal_id' => 'required|string|size:10',
+            'notification_method' => 'required|in:SMS,Email',
+            'provider_type' => 'required|string|in:doctor,hair_salon,restaurant',
+            'service_provider_id' => 'required|integer',
+        ];
+
+        $validated = $request->validate($rules);
+
         try {
             $booking = Booking::createBooking($request);
 
+            $business = $booking->business;
+            if ($business) {
+                NotificationService::sendNotification(
+                    $booking->notification_method,
+                    $business->phone,
+                    $business->email,
+                    $booking
+                );
+            }
+
             return response()->json([
-                'message' => 'Booking created successfully!',
+                'message' => 'Booking created successfully.',
                 'data' => $booking
             ], 201);
         } catch (Exception $e) {
@@ -49,36 +68,57 @@ class BookingController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Booking $booking
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function show(Booking $booking)
     {
         try {
+            $booking->load(['business.businessType', 'doctor', 'hairstylist', 'table']);
             return response()->json($booking);
         } catch (Exception $e) {
-            Log::error('Error fetching booking details: ' . $e->getMessage());
-            return response()->json(['error' => 'Error fetching booking details.'], 500);
+            Log::error('Error fetching booking: ' . $e->getMessage());
+            return response()->json(['error' => 'Error fetching booking.'], 500);
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param UpdateBookingRequest $request
-     * @param Booking $booking
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(UpdateBookingRequest $request, Booking $booking)
+    public function update(Request $request, Booking $booking)
     {
+        $rules = [
+            'business_id' => 'required|exists:businesses,id',
+            'date_time' => 'required|date|after:now',
+            'client_name' => 'required|string|max:255',
+            'personal_id' => 'required|string|size:10',
+            'notification_method' => 'required|in:SMS,Email',
+            'provider_type' => 'required|string|in:doctor,hair_salon,restaurant',
+            'service_provider_id' => 'required|integer',
+        ];
+
+        $validated = $request->validate($rules);
+
         try {
-            $booking->updateBooking($request->validated());
+            // Map provider dynamically
+            switch ($validated['provider_type']) {
+                case 'doctor':
+                    $validated['doctor_id'] = $validated['service_provider_id'];
+                    $validated['hairstylist_id'] = null;
+                    $validated['table_id'] = null;
+                    break;
+                case 'hair_salon':
+                    $validated['hairstylist_id'] = $validated['service_provider_id'];
+                    $validated['doctor_id'] = null;
+                    $validated['table_id'] = null;
+                    break;
+                case 'restaurant':
+                    $validated['table_id'] = $validated['service_provider_id'];
+                    $validated['doctor_id'] = null;
+                    $validated['hairstylist_id'] = null;
+                    break;
+            }
+
+            unset($validated['provider_type'], $validated['service_provider_id']);
+
+            $booking->updateBooking($validated);
 
             return response()->json([
-                'message' => 'Booking updated successfully!',
+                'message' => 'Booking updated successfully.',
                 'data' => $booking
             ]);
         } catch (Exception $e) {
@@ -87,12 +127,6 @@ class BookingController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Booking $booking
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy(Booking $booking)
     {
         try {
