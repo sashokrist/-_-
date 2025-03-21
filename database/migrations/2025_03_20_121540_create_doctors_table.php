@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('business_id')->nullable();
             $table->string('name');
             $table->string('specialty');
             $table->timestamps();
+
+            $table->index('business_id', 'fk_doctors_business');
         });
     }
 
