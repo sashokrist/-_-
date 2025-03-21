@@ -210,6 +210,21 @@ class BookingController extends Controller
 
             $booking->updateBooking($validated);
 
+//            $business = $booking->business;
+//
+//            if ($business) {
+//                $phone = $business->phone;
+//                $email = $business->email;
+//
+//                // Send notification
+//                NotificationService::sendNotification(
+//                    $booking->notification_method,
+//                    $phone,
+//                    $email,
+//                    $booking
+//                );
+//            }
+
             return redirect()->route('bookings.index')->with('success', "Часът беше редактиран успешно! Клиентът ще бъде уведомен с {$booking->notification_method}");
         } catch (Exception $e) {
             Log::error('Error updating booking: ' . $e->getMessage());
