@@ -14,7 +14,10 @@ Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name
 Route::put('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
 Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
-// Other routes for store, show, etc.
+Route::resource('doctors', DoctorController::class)->except(['create', 'edit']);
+Route::resource('hairstylists', HairstylistController::class)->except(['create', 'edit']);
+Route::resource('restaurant-tables', TableController::class)->except(['create', 'edit']);
+
 
 Auth::routes();
 
