@@ -2,10 +2,9 @@
 
 namespace App\Providers;
 
-use App\Interfaces\ProviderServiceInterface;
-use App\Interfaces\Services\DoctorServiceInterface;
-use App\Interfaces\Services\HairstylistServiceInterface;
-use App\Interfaces\Services\TableServiceInterface;
+use App\Services\Contracts\DoctorServiceInterface;
+use App\Services\Contracts\HairstylistServiceInterface;
+use App\Services\Contracts\TableServiceInterface;
 use App\Services\DoctorService;
 use App\Services\HairstylistService;
 use App\Services\TableService;

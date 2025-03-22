@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\Services\DoctorServiceInterface;
+use App\Services\Contracts\DoctorServiceInterface;
 use App\Models\Doctor;
 
 class DoctorService implements DoctorServiceInterface
@@ -33,5 +33,15 @@ class DoctorService implements DoctorServiceInterface
     {
         $doctor = Doctor::findOrFail($id);
         return $doctor->delete();
+    }
+
+    public function list()
+    {
+        return Doctor::all();
+    }
+
+    public function show($id)
+    {
+        return Doctor::findOrFail($id);
     }
 }

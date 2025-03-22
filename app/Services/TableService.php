@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\Services\TableServiceInterface;
+use App\Services\Contracts\TableServiceInterface;
 use App\Models\Table;
 
 class TableService implements TableServiceInterface
@@ -33,5 +33,15 @@ class TableService implements TableServiceInterface
     {
         $table = Table::findOrFail($id);
         return $table->delete();
+    }
+
+    public function list()
+    {
+        return Table::all();
+    }
+
+    public function show($id)
+    {
+        return Table::findOrFail($id);
     }
 }

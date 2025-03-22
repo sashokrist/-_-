@@ -1,5 +1,8 @@
 <?php
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\HairstylistController;
+use App\Http\Controllers\TableController;
 
 Route::get('/', function () {
     return view('welcome');

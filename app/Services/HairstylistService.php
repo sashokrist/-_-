@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\Services\HairstylistServiceInterface;
+use App\Services\Contracts\HairstylistServiceInterface;
 use App\Models\Hairstylist;
 
 class HairstylistService implements HairstylistServiceInterface
@@ -33,5 +33,15 @@ class HairstylistService implements HairstylistServiceInterface
     {
         $hairstylist = Hairstylist::findOrFail($id);
         return $hairstylist->delete();
+    }
+
+    public function list()
+    {
+        return Hairstylist::all();
+    }
+
+    public function show($id)
+    {
+        return Hairstylist::findOrFail($id);
     }
 }
