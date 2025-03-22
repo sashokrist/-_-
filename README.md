@@ -23,9 +23,7 @@ php artisan key:generate
 
 Set database credentials in .env
 
-php artisan migrate
-
-php artisan db:seed
+php artisan migrate and php artisan db:seed or instead run database/database.sal
 
 npm install
 
