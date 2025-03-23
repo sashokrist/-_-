@@ -390,6 +390,40 @@ BookingService е PHP service, която обработва операции, �
 
 Тази услуга централизира логиката на резервациите, като гарантира съгласуваност на данните и осигурява чист интерфейс за управление на резервациите в приложението.
 
+************************************************************************************
+Test API:
+POST /api/register
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "password",
+  "password_confirmation": "password"
+}
+
+POST /api/login
+
+{
+  "email": "test@example.com",
+  "password": "password"
+}
+
+The response will also contain a token:
+
+{
+  "token": "your_sanctum_token_here",
+  "user": { ... }
+}
+
+GET /api/bookings
+
+Authorization: Bearer your_sanctum_token_here
+
+Accept: application/json
+
+Content-Type: application/json
+
+***********************************************************************************
 
 SCREENSHOTS:
 ![filter](https://github.com/user-attachments/assets/4f1068b1-7086-4006-ac4f-a8a0452a13c1)
@@ -399,5 +433,11 @@ SCREENSHOTS:
 ![create](https://github.com/user-attachments/assets/e94392ab-7c3d-418e-a566-c7236cbf25a6)
 ![index](https://github.com/user-attachments/assets/4ec6fdd7-c014-45a6-8f04-d303de15b4ba)
 ![delete](https://github.com/user-attachments/assets/a92d0d23-40f2-4ec3-a739-e09a87661f34)
+
+API:
+![api_login](https://github.com/user-attachments/assets/56453075-39cf-40e8-9d00-ad026c414067)
+![api_bookings](https://github.com/user-attachments/assets/1efb11fa-b94f-4443-893b-64bd4d4c03fc)
+![api_reg](https://github.com/user-attachments/assets/5eab171f-03c1-4909-a23e-d615c0578248)
+
 
 
