@@ -1,3 +1,40 @@
+-- Create users table
+CREATE TABLE `users` (
+ `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+ `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `email_verified_at` timestamp NULL DEFAULT NULL,
+ `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+ `created_at` timestamp NULL DEFAULT NULL,
+ `updated_at` timestamp NULL DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create bookings table
+CREATE TABLE `bookings` (
+ `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+ `user_id` bigint unsigned NOT NULL,
+ `business_id` bigint unsigned NOT NULL,
+ `date_time` datetime NOT NULL,
+ `client_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+ `personal_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+ `description` text COLLATE utf8mb4_general_ci,
+ `notification_method` enum('SMS','Email') COLLATE utf8mb4_general_ci NOT NULL,
+ `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+ `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `doctor_id` bigint unsigned DEFAULT NULL,
+ `hairstylist_id` bigint unsigned DEFAULT NULL,
+ `table_id` bigint unsigned DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ KEY `fk_bookings_user` (`user_id`),
+ KEY `bookings_doctor_id_foreign` (`doctor_id`),
+ KEY `fk_bookings_business` (`business_id`),
+ KEY `fk_bookings_hairstylist` (`hairstylist_id`),
+ KEY `fk_bookings_table` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Create business_types table
 CREATE TABLE `business_types` (
     `id` INT NOT NULL AUTO_INCREMENT,

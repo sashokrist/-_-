@@ -8,7 +8,6 @@
         @method('PUT')
 
         @php
-            // Determine selected business type
             $selectedType = $booking->doctor_id ? 'doctor' : ($booking->hairstylist_id ? 'hair_salon' : ($booking->table_id ? 'restaurant' : ''));
         @endphp
 
@@ -16,7 +15,6 @@
         <input type="hidden" name="provider_type" value="{{ $selectedType }}">
         <input type="hidden" name="business_id" value="{{ $booking->business_id }}">
 
-        <!-- Business Type Display -->
         <div class="mb-3">
             <label>Тип бизнес</label>
             <input type="text" class="form-control" value="@switch($selectedType)
@@ -27,7 +25,6 @@
             @endswitch" disabled>
         </div>
 
-        <!-- Service Provider (Unified) -->
         <div class="mb-3">
             <label>Услуга</label>
             <select name="service_provider_id" class="form-control" required>
@@ -58,7 +55,6 @@
             @enderror
         </div>
 
-        <!-- Date and Time -->
         <div class="mb-3">
             <label>Дата и час</label>
             <input type="datetime-local" name="date_time" class="form-control"
@@ -68,14 +64,12 @@
             @enderror
         </div>
 
-        <!-- Client Name -->
         <div class="mb-3">
             <label>Име на клиента</label>
             <input type="text" name="client_name" class="form-control"
                    value="{{ old('client_name', $booking->client_name) }}" readonly>
         </div>
 
-        <!-- Personal ID -->
         <div class="mb-3">
             <label>ЕГН</label>
             <input type="text" name="personal_id" class="form-control"
@@ -85,7 +79,6 @@
             @enderror
         </div>
 
-        <!-- Description -->
         <div class="mb-3">
             <label>Описание</label>
             <textarea name="description" class="form-control">{{ old('description', $booking->description) }}</textarea>
@@ -94,7 +87,6 @@
             @enderror
         </div>
 
-        <!-- Notification Method -->
         <div class="mb-3">
             <label>Метод за нотификация</label>
             <select name="notification_method" class="form-control">

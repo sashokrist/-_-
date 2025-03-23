@@ -6,7 +6,6 @@
     <form method="POST" action="{{ route('bookings.store') }}">
         @csrf
 
-        <!-- Select Business -->
         <div class="mb-3">
             <label>Бизнес</label>
             <select id="business_id" name="business_id" class="form-control" required>
@@ -44,7 +43,6 @@
             </select>
         </div>
 
-        <!-- Date & Time -->
         <div class="mb-3">
             <label>Дата и час</label>
             <input type="datetime-local" name="date_time" class="form-control" value="{{ old('date_time') }}" required>
@@ -53,7 +51,6 @@
             @enderror
         </div>
 
-        <!-- Client Name -->
         <div class="mb-3">
             <label>Клиент</label>
             <input type="text" name="client_name" class="form-control" value="{{ old('client_name', $userName) }}" readonly>
@@ -62,7 +59,6 @@
             @enderror
         </div>
 
-        <!-- Personal ID -->
         <div class="mb-3">
             <label>ЕГН</label>
             <input type="text" name="personal_id" class="form-control" value="{{ old('personal_id') }}" required>
@@ -71,7 +67,6 @@
             @enderror
         </div>
 
-        <!-- Description -->
         <div class="mb-3">
             <label>Описание (незадължително)</label>
             <textarea name="description" class="form-control">{{ old('description') }}</textarea>
@@ -80,7 +75,6 @@
             @enderror
         </div>
 
-        <!-- Notification Method -->
         <div class="mb-3">
             <label>Метод за нотификация</label>
             <select name="notification_method" class="form-control">
